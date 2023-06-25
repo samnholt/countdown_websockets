@@ -1,0 +1,34 @@
+Logic:
+
+Start screen:
+A window where you input how many vowels you would like
+This is what starts the game - the player who first enters how many words they would like is the Player 1
+This calls get_letters_chosen and its result is displayed to the users
+
+A timer then starts, counting down from 30 seconds
+In this time, each player can submit one answer - if it is right or wrong, both have to wait until the end of the thirty seconds
+
+At the end of the time:
+Both answers are validated
+    If an answer is invalid, an invalid flag is set
+        If only one answer is invalid, then the other player automatically gets points from their word
+        If both answers are invalid, the round is a draw and both score zero
+    If an answer is valid (i.e. is present in words.txt and matches the chosen letters)
+        The player gets the points from their word (not applied to score)
+        These points are compared and the winning score is appended to the player
+
+new round process:
+times up and score of player
+tell server new round
+
+Repeat six times
+
+Compare both scores at the end, winner is the player with the most
+
+javascript is sending init with vowels
+handler 
+
+Messages required
+
+i don't think that we should make you wait all the thirty seconds
+for 1P: the round should end after either submitting a guess or the time being up
