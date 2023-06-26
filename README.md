@@ -1,4 +1,4 @@
-#A countdown game!#
+# A countdown game! #
 
 Start a virtual environment.
 
