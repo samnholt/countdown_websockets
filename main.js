@@ -4,6 +4,8 @@
 // 
 //
 
+let timerId;
+
 function startGame(socket, startGameButton, vowelsSection) {
     startGameButton.addEventListener('click', () => {
         let event = {
@@ -57,8 +59,7 @@ function receiveLetters(socket, letterStringElement, gameSection, timerElement, 
             gameSection.style.display = 'block';
             roundNumberElement.textContent = `Round ${event.round_number}/6`;
 
-            let timerId = startTimer(socket, guessedWordInput);
-            startTimer(timerElement, gameSection);
+            timerId = startTimer(socket, timerElement, gameSection);
         }
     });
 }
@@ -80,7 +81,7 @@ function sendGuess(socket, guessedWordInput, submitGuessButton, timerId, postGue
     });
 }
 
-function startTimer(timerElement, gameSection) {
+function startTimer(socket, timerElement, gameSection) {
     let countdown = 30; // in seconds
     // Set countdown timer and start it
     // if a guess is sent, end the timer
@@ -89,9 +90,10 @@ function startTimer(timerElement, gameSection) {
         timerElement.textContent = countdown + " seconds remaining";
         if (countdown <= 0) {
             clearInterval(timerId);
-            endRound(socket, gameSection)
+            endRound(socket, gameSection, postGuessMessageElement, guessedWordInput);
         }
     }, 1000);
+    return timerId
 }
 
 function processScore(socket, scoreDisplay, vowelsCountInput, nextRoundButton) {
@@ -162,7 +164,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             startGame(socket, startGameButton, vowelsSection);
             sendVowels(socket, vowelsCountInput)
             receiveLetters(socket, letterStringElement, gameSection, timerElement, RoundNumberElement);
-            sendGuess(socket, guessedWordInput, submitGuessButton, postGuessMessageElement, gameSection);
+            sendGuess(socket, guessedWordInput, submitGuessButton, timerId, postGuessMessageElement, gameSection);
             processScore(socket, scoreDisplay, vowelsCountInput, nextRoundButton);
             displayMessage(socket, postGuessMessageElement);
             endGame(socket, endTitleElement, endElement, playElement) ;
