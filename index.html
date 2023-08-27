@@ -7,31 +7,37 @@
 </head>
 <body>
     <h1>Countdown Game</h1>
-    <div id="play">
-        <button id="startGame">Start Game</button>
-        <div id="vowels" style="display: none;">
-            <label for="vowelsCount">Enter the number of vowels (0-10):</label>
-            <input type="number" id="vowelsCount" min="3" max="5">
-            <button id="sendVowels">Start Game</button>
-        </div>
-        <div id="gameSection" style="display: none;">
-            <h2>Your letters:</h2>
-            <p id="letterString"></p>
-            <label for="guessedWord">Enter your guess:</label>
-            <input type="text" id="guessedWord">
-            <button id="submitGuessButton">Submit Guess</button>
-        </div>
-        <div>
-            <h2 id="scoreDisplay"></h2>
-        </div>
+
+    <div id="initArea">
+        <button id="startGame">Start One Player Game</button>
+        <button id="startGame2">Start Two Player Game</button>
+    </div>
+
+    <div id="vowelsArea">
+        <label for="vowelsCount">Enter your chosen number of vowels (3-5):</label>
+        <input type="number" id="vowelsCount" min="3" max="5">
+        <button id="sendVowels">Submit Vowels</button>
+    </div>
+
+    <div id="playArea">
+        <h2>Your letters:</h2>
+        <p id="letterString"></p>
+        <label for="guessedWord">Enter your guess:</label>
+        <input type="text" id="guessedWord">
+        <button id="submitGuessButton">Submit Guess</button>
+        <h2 id="scoreDisplay"></h2>
         <h3 id="postGuessMessage"></h3>
         <div id="timer"></div>
-        <button id="nextRoundButton" style="display: none;">Next Round</button>
         <h2 id="roundNumber"></h2>
     </div>
-    <div id="end" style="display: none;">
+
+    <div id="endArea" style="display: none;">
         <h2 id="endTitle"></h2>
         <p>Thanks for playing!</p>
     </div>
+    
 </body>
 </html>
+
+
+
