@@ -97,11 +97,21 @@ function Letters() {
 }
 
 function Guess() {
+    const inputRef = useRef(null);
+    const { sendJsonMessage } = useWebSocket(WS_URL, {share: true})
+
+    const handleClick = () => {
+        sendJsonMessage({
+            type: 'submitGuess',
+            guessed_word: inputRef.current.value,
+        })
+    }
     return (
         <>
-            <label htmlFor="guessedWord">Enter your guess:</label>
-            <input type="text" id="guessedWord"></input>
-            <button id="submitGuessButton">Submit Guess</button>
+            <label htmlFor="guessedWord">Enter your guess:
+                <input type="text" id="guessedWord" ref={inputRef}></input>
+                <button id="submitGuessButton" onClick={handleClick}>Submit Guess</button>
+            </label>
         </>
     )
 }
