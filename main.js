@@ -15,7 +15,7 @@ function startGame(socket, startGameButton, vowelsSection) {
         startGameButton.style.display = 'none';
         vowelsSection.style.display = 'block';
 });
-};
+}
 
 
 function sendVowels(socket, vowelsCountInput) {
@@ -35,18 +35,18 @@ function sendVowels(socket, vowelsCountInput) {
         
     })
 
-};
+}
 
 
 function displayMessage(socket, postGuessMessageElement) {
     socket.addEventListener("message", ({ data }) => {
         const event = JSON.parse(data);
-        if (event.type == "score") {
+        if (event.type === "score") {
             postGuessMessageElement.textContent = `${event.text}`
-        };
+        }
         if (event.type == "display") {
             postGuessMessageElement.style.display = 'none'
-        };
+        }
     })
 }
 
@@ -108,9 +108,9 @@ function processScore(socket, scoreDisplay, vowelsCountInput, nextRoundButton) {
             case "invalid":
                 scoreDisplay.textContent = `${event.text}`
                 break;
-                };
+                }
             });
-        };
+        }
 
 function endRound (socket, gameSection, postGuessMessageElement, guessedWordInput) {
     gameSection.style.display = 'none';
