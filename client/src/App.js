@@ -28,7 +28,7 @@ function Game() {
     return (
         <>
             <StartButton />
-            <Vowels />
+            <SetVowels />
             <Play />
             <CountdownTimer />
             <Score />
@@ -59,14 +59,12 @@ function StartButton() {
     return <button onClick={handleClickStartGame}>Start Game</button>
 }
 
-function Vowels() {
+function SetVowels() {
 
     const inputRef = useRef(null);
     const { sendJsonMessage } = useWebSocket(WS_URL, {share: true})
 
-
     const handleClick = () => {
-        // setUpdated(inputRef.current.value);
         sendJsonMessage({
             'type': 'display',
             'vowels_chosen': parseInt(inputRef.current.value)
@@ -84,10 +82,15 @@ function Vowels() {
     )
 }
 
+
 function Letters() {
+    const { lastJsonMessage } = useWebSocket(WS_URL, {share: true})
+
+    let letters = lastJsonMessage?.letters || '';
+
     return (
         <>
-            <h2>Your letters:</h2>
+            <h2>Your letters: <p>{letters}</p></h2>
             <p id="letterString"></p>
         </>
     )
