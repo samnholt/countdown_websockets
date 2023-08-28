@@ -23,5 +23,5 @@ class Round:
     """
     # round_number: int = 1
     vowels_chosen: int
-    score: int
+    score: int = 0
 

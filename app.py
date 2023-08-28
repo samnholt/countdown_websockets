@@ -2,6 +2,9 @@ import logging
 import asyncio
 import json
 import websockets
+import threading
+import time
+
 
 from countdown import Game, Round, PLAYER1, PLAYER2
 from countdown_letters.logic import get_letters_chosen, get_game_score
@@ -36,6 +39,7 @@ async def start_round(websocket, game):
         round = Round(vowels_chosen=0)
         event = json.loads(message)
         assert event['type'] == 'display'
+        letters_sent_timestamp = time.time()
         round.vowels_chosen = event['vowels_chosen']
         letters = get_letters_chosen(round.vowels_chosen)
         game.rounds.append(round)
@@ -45,13 +49,22 @@ async def start_round(websocket, game):
             "type": "send_letters",
             "letters": letters,
             "round_number": round_number,
+            "letters_sent_timestamp": letters_sent_timestamp
         }
 
         await websocket.send(json.dumps(event))
-        await process_guess(websocket, game, round, letters, round_number)
+        try:
+            await asyncio.wait_for(process_guess(websocket, game, round, letters, round_number, letters_sent_timestamp), timeout=30)
+        except asyncio.TimeoutError:
+            print('timeout')
+            await round_over(websocket)
 
 
-async def process_guess(websocket, game, round, letters: str, round_number, guessed=False):
+async def round_over(websocket):
+    websocket.send('Times up')
+
+
+async def process_guess(websocket, game, round, letters: str, round_number, letters_sent_timestamp, guessed=False):
     """
     Process a guess
     """
@@ -63,7 +76,7 @@ async def process_guess(websocket, game, round, letters: str, round_number, gues
             print(type(letters))
             if is_eligible_answer(guessed_word, letters):
                 score = get_game_score(len(guessed_word))
-                round.score = (score, 0)
+                round.score = score
                 game_score = game.get_total_score()
 
                 event = {
@@ -75,6 +88,7 @@ async def process_guess(websocket, game, round, letters: str, round_number, gues
                 }
                 guessed = True
                 await websocket.send(json.dumps(event))
+                await start_round(websocket, game)
             else:
                 round.score = (0, 0)
                 game_score = game.get_total_score()
@@ -101,6 +115,10 @@ async def process_guess(websocket, game, round, letters: str, round_number, gues
             await start_round(websocket, game)
         elif event['type'] == "end_round":
             await start_round(websocket, game)
+
+# def process_game
+#
+#
 
 
 async def handler(websocket):

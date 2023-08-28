@@ -1,11 +1,18 @@
 import React, {useCallback, useRef} from 'react';
 import { useState } from 'react';
 import useWebSocket from "react-use-websocket";
+import Countdown from 'react-countdown';
 
 import logo from './logo.svg';
 import './App.css';
 
 const WS_URL = 'ws://0.0.0.0:8001'
+
+function isLettersEvent(message) {
+    let evt = JSON.parse(message.data);
+    return evt.type === 'send_letters'
+}
+
 
 function App() {
 
@@ -84,7 +91,7 @@ function SetVowels() {
 
 
 function Letters() {
-    const { lastJsonMessage } = useWebSocket(WS_URL, {share: true})
+    const { lastJsonMessage } = useWebSocket(WS_URL, {share: true, filter: isLettersEvent})
 
     let letters = lastJsonMessage?.letters || '';
 
@@ -117,15 +124,28 @@ function Guess() {
 }
 
 function CountdownTimer() {
+    const { lastJsonMessage } = useWebSocket(WS_URL, {share: true, filter: isLettersEvent})
+
+
+    // Given epoch timestamp in seconds
+    let epochTimestamp = lastJsonMessage?.letters_sent_timestamp || '';
+
+    let epochTimestampMilli = epochTimestamp * 1000
+
+
     return (
         <>
-        <h3>Time left:</h3>
+        <h3>Time left: <p><Countdown date={Date.now() + 10000}/></p></h3>
         </>
     )
 }
 
 function Score () {
-    return <h3>Your score:</h3>
+    const { lastJsonMessage } = useWebSocket(WS_URL, {share: true})
+
+    let score = lastJsonMessage?.game_score || '';
+
+    return <h3>Your score:<p>{score}</p></h3>
 }
 
 
