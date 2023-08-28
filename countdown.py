@@ -4,6 +4,7 @@ __all__ = ["PLAYER1", "PLAYER2", "Connect4"]
 
 PLAYER1, PLAYER2 = "Player 1", "Player 2"
 
+
 @dataclass
 class Game:
     """
@@ -12,7 +13,8 @@ class Game:
     rounds: list
 
     def get_total_score(self):
-        return [sum(x) for x in zip(*[i.score for i in self.rounds])]
+        return sum([i.score for i in self.rounds])
+
 
 @dataclass
 class Round:
@@ -21,5 +23,5 @@ class Round:
     """
     # round_number: int = 1
     vowels_chosen: int
-    score: tuple = (0,0)    
+    score: int
 
